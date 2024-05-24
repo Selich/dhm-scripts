@@ -32,7 +32,7 @@ def start_server(host='0.0.0.0', port=18022, output_file='hl7_messages.csv'):
                         data = client_socket.recv(1024)
                         if not data:
                             break
-                        buffer += data.decode('utf-8')
+                        buffer += data.decode('ISO-8859-1')
                         if "\r" in buffer:
                             lines = buffer.split("\r")
                             for line in lines[:-1]:
