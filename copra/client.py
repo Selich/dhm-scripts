@@ -1,12 +1,10 @@
 import socket
 import csv
 import os
-import time
 
 def reformat_message_to_csv(message):
     components = message.split(',')
     return components
-
 
 def listen_and_save(port=18022, output_file="hl7_messages.csv"):
     host = 'localhost'
@@ -39,16 +37,4 @@ def listen_and_save(port=18022, output_file="hl7_messages.csv"):
             print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    # listen_and_save()
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect(('localhost', 18022))
-    while True:
-        data = client_socket.recv(512)
-        message = data.decode("ISO-8859-1")
-        csv_data = reformat_message_to_csv(message)
-        output_file="hl7_messages.csv"
-        with open(output_file, "a", encoding="ISO-8859-1", newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(csv_data)
-
-        print("RECEIVED: %s" % data)
+    listen_and_save()
