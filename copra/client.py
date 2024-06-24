@@ -1,7 +1,8 @@
 import socket
 import csv
+from datetime import datetime
 
-def start_server(host='0.0.0.0', port=18022, output_file='hl7_messages.csv'):
+def start_server(host='0.0.0.0', port=18022):
     # Define the columns
     columns = [
         "Segment", "Field1", "Field2", "Field3", "Field4", "Field5", "Field6", "Field7", "Field8", "Field9", "Field10",
@@ -10,6 +11,9 @@ def start_server(host='0.0.0.0', port=18022, output_file='hl7_messages.csv'):
         "NatureOfAbnormalTest", "ObservationResultStatus", "DateLastObservationNormalValue", "UserDefinedAccessChecks",
         "DateTimeOfTheObservation", "ProducerID", "ResponsibleObserver", "ObservationMethod"
     ]
+    
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    output_file = f'hl7_messages_{current_date}.csv'
     
     with open(output_file, 'a', newline='') as csvfile:
         csv_writer = csv.writer(csvfile, delimiter='|')
@@ -43,6 +47,14 @@ def start_server(host='0.0.0.0', port=18022, output_file='hl7_messages.csv'):
                                     csv_writer.writerow(row)
                                     csvfile.flush()
                             buffer = lines[-1]
+                
+                new_date = datetime.now().strftime('%Y-%m-%d')
+                if new_date != current_date:
+                    current_date = new_date
+                    output_file = f'hl7_messages_{current_date}.csv'
+                    with open(output_file, 'a', newline='') as new_csvfile:
+                        csv_writer = csv.writer(new_csvfile, delimiter='|')
+                        csv_writer.writerow(columns)
 
 if __name__ == "__main__":
     start_server()
