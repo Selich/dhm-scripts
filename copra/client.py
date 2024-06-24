@@ -1,6 +1,7 @@
 import socket
 import csv
 from datetime import datetime
+import os
 
 def start_server(host='0.0.0.0', port=18022):
     # Define the columns
@@ -13,7 +14,9 @@ def start_server(host='0.0.0.0', port=18022):
     ]
     
     current_date = datetime.now().strftime('%Y-%m-%d')
-    output_file = f'hl7_messages_{current_date}.csv'
+    output_dir = '/data/copradata'
+    os.makedirs(output_dir, exist_ok=True)
+    output_file = os.path.join(output_dir, f'hl7_messages_{current_date}.csv')
     
     with open(output_file, 'a', newline='') as csvfile:
         csv_writer = csv.writer(csvfile, delimiter='|')
@@ -51,7 +54,7 @@ def start_server(host='0.0.0.0', port=18022):
                 new_date = datetime.now().strftime('%Y-%m-%d')
                 if new_date != current_date:
                     current_date = new_date
-                    output_file = f'hl7_messages_{current_date}.csv'
+                    output_file = os.path.join(output_dir, f'hl7_messages_{current_date}.csv')
                     with open(output_file, 'a', newline='') as new_csvfile:
                         csv_writer = csv.writer(new_csvfile, delimiter='|')
                         csv_writer.writerow(columns)
